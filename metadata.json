@@ -1,0 +1,6 @@
+{
+  "name": "ConnectCall",
+  "description": "Functional 1-to-1 audio and video calling app with real-time call states, contacts, history, and user profiles.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
