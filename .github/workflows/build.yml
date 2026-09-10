@@ -26,11 +26,16 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # 4. बिना Keystore एरर के APK फाइल कंपाइल/बिल्ड करना
-      - name: Build with Gradle
-        run: ./gradlew assembleDebug -x validateSigningDebug -x :app:validateSigningDebug
+      # 4. नकली Keystore फाइल बनाना (ताकि एरर हमेशा के लिए खत्म हो जाए)
+      - name: Generate Dummy Debug Keystore
+        run: |
+          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
-      # 5. बनी हुई APK को डाउनलोड के लिए सेव करना
+      # 5. APK फाइल कंपाइल/बिल्ड करना
+      - name: Build with Gradle
+        run: ./gradlew assembleDebug
+
+      # 6. बनी हुई APK को डाउनलोड के लिए सेव करना
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
