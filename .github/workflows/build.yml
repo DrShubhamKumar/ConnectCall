@@ -11,54 +11,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v5 # यहाँ v4 की जगह v5 कर दिया है ताकि वार्निंग हट जाए
+      # 1. Java 21 सेटअप (Gradle 9.3.1 के लिए ज़रूरी है)
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
-      # यहाँ हम चेक कर रहे हैं कि फाइल कहाँ है, ताकि एरर न आए
+      # 2. गायब gradlew फाइल को खुद से जनरेट करना
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper
+
+      # 3. फाइल को रन करने की परमिशन देना
       - name: Grant execute permission for gradlew
-        run: |
-          if [ -f ./gradlew ]; then
-            chmod +x ./gradlew
-          elif [ -f ./ConnectCall/gradlew ]; then
-            cd ConnectCall
-            chmod +x gradlew
-          else
-            echo "Gradlew file not found!"
-            exit 1
-          fi
+        run: chmod +x gradlew
 
-      # सही फोल्डर में जाकर APK बिल्ड करना
+      # 4. APK फाइल कंपाइल/बिल्ड करना
       - name: Build with Gradle
-        run: |
-          if [ -f ./gradlew ]; then
-            ./gradlew assembleDebug
-          else
-            cd ConnectCall
-            ./gradlew assembleDebug
-          fi
+        run: ./gradlew assembleDebug
 
-      # बनी हुई APK को खोजना और अपलोड करना
+      # 5. बनी हुई APK को डाउनलोड के लिए सेव करना
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ConnectCall-Debug-APK
-          path: |
-            app/build/outputs/apk/debug/app-debug.apk
-            **/build/outputs/apk/debug/*.apk
-
-
-name: Debug Repo Structure
-
-on:
-  workflow_dispatch:
-
-jobs:
-  check-files:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: List files
-        run: ls -R
+          path: app/build/outputs/apk/debug/app-debug.apk
