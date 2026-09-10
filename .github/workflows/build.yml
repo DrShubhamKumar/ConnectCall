@@ -26,7 +26,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # 4. सही जगह पर Keystore फाइल बनाना (यहाँ पाथ फिक्स किया है)
+      # 4. सही रूट और ऐप दोनों फोल्डर में Keystore फाइल बनाना
       - name: Generate Dummy Debug Keystore
         run: |
           keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
