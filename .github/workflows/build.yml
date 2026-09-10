@@ -26,9 +26,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # 4. बिना Keystore के APK फाइल कंपाइल/बिल्ड करना (यहाँ बदलाव किया है)
+      # 4. बिना Keystore एरर के APK फाइल कंपाइल/बिल्ड करना
       - name: Build with Gradle
-        run: ./gradlew assembleDebug -x :app:validateSigningDebug
+        run: ./gradlew assembleDebug -x validateSigningDebug -x :app:validateSigningDebug
 
       # 5. बनी हुई APK को डाउनलोड के लिए सेव करना
       - name: Upload APK
